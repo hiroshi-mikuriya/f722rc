@@ -1,6 +1,6 @@
 #include "tuner.hpp"
-#include "ssd1306.hpp"
 #include "lib_filter.hpp"
+#include "ssd1306.hpp"
 
 /*
  * ギター チューナー(ベースでの動作未確認)

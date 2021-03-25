@@ -22,14 +22,14 @@
  */
 
 /* Includes */
-#include <sys/stat.h>
-#include <stdlib.h>
 #include <errno.h>
-#include <stdio.h>
 #include <signal.h>
-#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <time.h>
 
 
 /* Variables */

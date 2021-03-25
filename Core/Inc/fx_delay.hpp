@@ -2,8 +2,8 @@
 
 #include "common.h"
 #include "lib_calc.hpp"
-#include "lib_filter.hpp"
 #include "lib_delay.hpp"
+#include "lib_filter.hpp"
 
 class fx_delay : public fx_base {
 private:

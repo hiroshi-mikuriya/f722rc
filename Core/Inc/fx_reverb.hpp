@@ -2,8 +2,8 @@
 
 #include "common.h"
 #include "lib_calc.hpp"
-#include "lib_filter.hpp"
 #include "lib_delayPrimeNum.hpp"
+#include "lib_filter.hpp"
 
 class fx_reverb : public fx_base {
 private:

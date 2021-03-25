@@ -1,8 +1,8 @@
 #pragma once
 
 #include "common.h"
-#include "lib_osc.hpp"
 #include "lib_calc.hpp"
+#include "lib_osc.hpp"
 
 class fx_tremolo : public fx_base {
 private:

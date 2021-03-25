@@ -35,7 +35,7 @@ IndentWidth: 4
 MaxEmptyLinesToKeep: 10
 NamespaceIndentation: None
 PointerAlignment: Left
-SortIncludes: false
+SortIncludes: true
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true

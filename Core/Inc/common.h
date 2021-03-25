@@ -7,13 +7,13 @@ using std::string;
 /* 各定数設定 --------------------------*/
 
 // ペダル名称表示
-#define PEDAL_NAME "Sodium v0.7"
+constexpr char const* PEDAL_NAME = "Sodium v0.7";
 
 // ブロックサイズ まとめて処理を行う数
 #define BLOCK_SIZE 16
 
 // サンプリング周波数
-#define SAMPLING_FREQ 44108.07f
+constexpr float SAMPLING_FREQ = 44108.07f;
 
 // スイッチ短押し時間 ミリ秒
 #define SHORT_PUSH_MSEC 20
@@ -38,7 +38,7 @@ enum FXtype { OD, DD, TR, CE, PH, RV };
 #define TAP_ENABLED 1
 
 // タップテンポ最大時間 ミリ秒
-#define MAX_TAP_TIME 3000.0f
+constexpr float MAX_TAP_TIME = 3000.0f;
 
 // チューナー機能 有効1 無効0
 #define TUNER_ENABLED 1
@@ -50,7 +50,7 @@ enum FXtype { OD, DD, TR, CE, PH, RV };
 /* 関数 -------------------------------------*/
 
 // 円周率
-#define PI 3.14159265359f
+constexpr float PI = 3.14159265359f;
 
 // 最小値、最大値、絶対値関数
 #ifndef min

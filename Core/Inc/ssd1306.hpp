@@ -11,9 +11,9 @@
 
 #pragma once
 
+#include "fonts.h"
 #include "stm32f7xx_hal.h"
 #include <string>
-#include "fonts.h"
 using std::string;
 
 // I2c address

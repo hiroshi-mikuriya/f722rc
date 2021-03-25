@@ -1,8 +1,8 @@
-#include "common.h"
 #include "user_main.h"
+#include "common.h"
+#include "fx.hpp"
 #include "main.h"
 #include "ssd1306.hpp"
-#include "fx.hpp"
 
 #if TUNER_ENABLED
 #include "tuner.hpp"

@@ -7,12 +7,12 @@ uint16_t fxColorList[MAX_FX_NUM] = {}; // エフェクトLED色 RGB565
 #include "fx_base.hpp"
 
 // 各エフェクト 派生クラス ヘッダー
-#include "fx_overdrive.hpp"
-#include "fx_delay.hpp"
-#include "fx_tremolo.hpp"
 #include "fx_chorus.hpp"
+#include "fx_delay.hpp"
+#include "fx_overdrive.hpp"
 #include "fx_phaser.hpp"
 #include "fx_reverb.hpp"
+#include "fx_tremolo.hpp"
 
 // 各エフェクト グローバルインスタンス生成
 static fx_overdrive od1;
