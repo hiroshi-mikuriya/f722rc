@@ -35,7 +35,7 @@ IndentWidth: 4
 MaxEmptyLinesToKeep: 10
 NamespaceIndentation: None
 PointerAlignment: Left
-SortIncludes: true
+SortIncludes: false
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
@@ -46,4 +46,4 @@ SpacesInParentheses: false
 SpacesInSquareBrackets: false
 TabWidth: 4
 UseTab: false
-
+CommentPragmas: '^((\s*\@)|([\*\!\/]))' # コメントの行頭が @ の場合、冒頭が *、!、/ のいずれかの場合、そのコメントを整形しない(doxygen コメントを壊さないようにする)

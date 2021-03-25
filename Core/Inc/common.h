@@ -29,10 +29,11 @@ using std::string;
 #define MAX_FX_NUM 6
 
 // エフェクト番号割当
-enum FXtype {OD, DD, TR, CE, PH, RV};
+enum FXtype { OD, DD, TR, CE, PH, RV };
 
 // エフェクト有効・無効リスト
-#define FX_ENABLE_SETTING {true, true, true, true, true, true}
+#define FX_ENABLE_SETTING                                                                          \
+    { true, true, true, true, true, true }
 
 // タップテンポ機能 有効1 無効0
 #define TAP_ENABLED 1
