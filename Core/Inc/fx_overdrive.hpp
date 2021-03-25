@@ -1,5 +1,4 @@
-#ifndef FX_OVERDRIVE_HPP
-#define FX_OVERDRIVE_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -145,5 +144,3 @@ public:
         }
     }
 };
-
-#endif // FX_OVERDRIVE_HPP

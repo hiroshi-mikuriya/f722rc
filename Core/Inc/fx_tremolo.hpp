@@ -1,5 +1,4 @@
-#ifndef FX_TREMOLO_HPP
-#define FX_TREMOLO_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_osc.hpp"
@@ -120,5 +119,3 @@ public:
         }
     }
 };
-
-#endif // FX_TREMOLO_HPP

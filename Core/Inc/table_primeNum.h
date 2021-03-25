@@ -1,5 +1,4 @@
-#ifndef TABLE_PRIMENUM_H
-#define TABLE_PRIMENUM_H
+#pragma once
 
 /* ディレイタイム(0～255ms)→素数サンプル数変換テーブル */
 
@@ -68,5 +67,3 @@ const uint16_t primeNum[256] = {
 24379, 24481
 };
 */
-
-#endif // TABLE_PRIMENUM_H

@@ -1,7 +1,6 @@
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 using std::string;
 
@@ -84,5 +83,3 @@ extern float tapTime;
 // fx.cpp で定義
 extern string fxNameList[MAX_FX_NUM];
 extern uint16_t fxColorList[MAX_FX_NUM];
-
-#endif // COMMON_H

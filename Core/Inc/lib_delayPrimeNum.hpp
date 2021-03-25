@@ -1,5 +1,4 @@
-#ifndef LIB_DELAY_PRIMENUM_HPP
-#define LIB_DELAY_PRIMENUM_HPP
+#pragma once
 
 #include "common.h"
 #include "table_primeNum.h"
@@ -52,5 +51,3 @@ public:
         return delayArray[wpos];
     }
 };
-
-#endif // LIB_DELAY_PRIMENUM_HPP

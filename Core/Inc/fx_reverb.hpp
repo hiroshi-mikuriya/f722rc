@@ -1,5 +1,4 @@
-#ifndef FX_REVERB_HPP
-#define FX_REVERB_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -216,5 +215,3 @@ public:
         }
     }
 };
-
-#endif // FX_REVERB_HPP

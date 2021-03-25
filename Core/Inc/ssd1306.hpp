@@ -9,8 +9,7 @@
  *
  */
 
-#ifndef _SSD1306_HPP
-#define _SSD1306_HPP
+#pragma once
 
 #include "stm32f7xx_hal.h"
 #include <string>
@@ -59,5 +58,3 @@ void ssd1306_InvertColors(void);
 void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font);
 void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font);
 void ssd1306_InvertPixel(uint8_t x, uint8_t y);
-
-#endif // _SSD1306_HPP

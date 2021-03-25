@@ -1,5 +1,4 @@
-#ifndef FX_HPP
-#define FX_HPP
+#pragma once
 
 #include "common.h"
 
@@ -10,5 +9,3 @@ void fxDeinit();
 void fxSetParamStr(uint8_t paramIndex);
 
 void fxProcess(float xL[], float xR[]);
-
-#endif // FX_HPP

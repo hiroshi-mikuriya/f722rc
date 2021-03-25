@@ -1,5 +1,4 @@
-#ifndef FX_CHORUS_HPP
-#define FX_CHORUS_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -149,5 +148,3 @@ public:
         }
     }
 };
-
-#endif // FX_CHORUS_HPP

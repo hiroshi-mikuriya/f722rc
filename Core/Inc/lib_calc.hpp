@@ -1,5 +1,4 @@
-#ifndef LIB_CALC_HPP
-#define LIB_CALC_HPP
+#pragma once
 
 #include "common.h"
 #include "table_dbToGain.h"
@@ -81,5 +80,3 @@ public:
         }
     }
 };
-
-#endif // LIB_CALC_HPP

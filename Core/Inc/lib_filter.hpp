@@ -1,5 +1,4 @@
-#ifndef LIB_FILTER_HPP
-#define LIB_FILTER_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -354,5 +353,3 @@ public:
         b2 = 1.0f;
     }
 };
-
-#endif // LIB_FILTER_HPP

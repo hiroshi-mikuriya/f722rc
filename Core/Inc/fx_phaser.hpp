@@ -1,5 +1,4 @@
-#ifndef FX_PHASER_HPP
-#define FX_PHASER_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -118,5 +117,3 @@ public:
         }
     }
 };
-
-#endif // FX_PHASER_HPP

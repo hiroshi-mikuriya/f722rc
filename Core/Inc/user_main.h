@@ -1,5 +1,4 @@
-#ifndef USER_MAIN_H
-#define USER_MAIN_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,5 +17,3 @@ void fxChange();
 void loadData();
 void saveData();
 void eraseData();
-
-#endif // USER_MAIN_H

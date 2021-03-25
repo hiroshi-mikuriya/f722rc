@@ -1,5 +1,4 @@
-#ifndef FX_DELAY_HPP
-#define FX_DELAY_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -156,5 +155,3 @@ public:
         }
     }
 };
-
-#endif // FX_DELAY_HPP

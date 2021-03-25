@@ -1,5 +1,4 @@
-#ifndef LIB_DELAY_HPP
-#define LIB_DELAY_HPP
+#pragma once
 
 #include "common.h"
 
@@ -81,5 +80,3 @@ public:
         return ((float)delayArray[wpos]) / 32767.0f; // バッファ配列からfloatで読み出し
     }
 };
-
-#endif // LIB_DELAY_HPP

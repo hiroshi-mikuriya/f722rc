@@ -1,5 +1,4 @@
-#ifndef LIB_OSC_HPP
-#define LIB_OSC_HPP
+#pragma once
 
 #include "common.h"
 #include "lib_calc.hpp"
@@ -34,5 +33,3 @@ public:
         return 2.0f * y;  // 0 ... 1 Triangle Wave
     }
 };
-
-#endif // LIB_OSC_HPP
