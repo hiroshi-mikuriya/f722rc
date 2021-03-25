@@ -29,6 +29,15 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_ll_dma.h"
+#include "stm32f7xx_ll_rcc.h"
+#include "stm32f7xx_ll_bus.h"
+#include "stm32f7xx_ll_system.h"
+#include "stm32f7xx_ll_exti.h"
+#include "stm32f7xx_ll_cortex.h"
+#include "stm32f7xx_ll_utils.h"
+#include "stm32f7xx_ll_pwr.h"
+#include "stm32f7xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -58,23 +67,23 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SW4_FOOT_Pin GPIO_PIN_1
+#define SW4_FOOT_Pin LL_GPIO_PIN_1
 #define SW4_FOOT_GPIO_Port GPIOA
-#define LED_RED_Pin GPIO_PIN_4
+#define LED_RED_Pin LL_GPIO_PIN_4
 #define LED_RED_GPIO_Port GPIOA
-#define LED_GREEN_Pin GPIO_PIN_5
+#define LED_GREEN_Pin LL_GPIO_PIN_5
 #define LED_GREEN_GPIO_Port GPIOA
-#define LED_BLUE_Pin GPIO_PIN_6
+#define LED_BLUE_Pin LL_GPIO_PIN_6
 #define LED_BLUE_GPIO_Port GPIOA
-#define SW0_UPPER_L_Pin GPIO_PIN_0
+#define SW0_UPPER_L_Pin LL_GPIO_PIN_0
 #define SW0_UPPER_L_GPIO_Port GPIOB
-#define SW1_LOWER_L_Pin GPIO_PIN_1
+#define SW1_LOWER_L_Pin LL_GPIO_PIN_1
 #define SW1_LOWER_L_GPIO_Port GPIOB
-#define CODEC_RST_Pin GPIO_PIN_11
+#define CODEC_RST_Pin LL_GPIO_PIN_11
 #define CODEC_RST_GPIO_Port GPIOB
-#define SW2_UPPER_R_Pin GPIO_PIN_4
+#define SW2_UPPER_R_Pin LL_GPIO_PIN_4
 #define SW2_UPPER_R_GPIO_Port GPIOB
-#define SW3_LOWER_R_Pin GPIO_PIN_5
+#define SW3_LOWER_R_Pin LL_GPIO_PIN_5
 #define SW3_LOWER_R_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
