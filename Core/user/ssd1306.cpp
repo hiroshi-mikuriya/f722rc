@@ -1,4 +1,5 @@
 #include "ssd1306.hpp"
+#include "cmsis_os.h"
 
 // Screenbuffer
 static uint8_t SSD1306_Buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8];
@@ -14,7 +15,7 @@ static uint8_t ssd1306_WriteCommand(I2C_HandleTypeDef* hi2c, uint8_t command) {
 //  Initialize the oled screen
 uint8_t ssd1306_Init(I2C_HandleTypeDef* hi2c) {
     // Wait for the screen to boot
-    HAL_Delay(100);
+    osDelay(100);
     int status = 0;
 
     // Init LCD
@@ -160,7 +161,7 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
 }
 
 //  Write full string to screenbuffer
-char ssd1306_WriteString(string strn, FontDef Font, SSD1306_COLOR color) {
+char ssd1306_WriteString(std::string strn, FontDef Font, SSD1306_COLOR color) {
     const char* str = strn.c_str();
 
     // Write until null-byte
@@ -188,14 +189,14 @@ void ssd1306_SetCursor(uint8_t x, uint8_t y) {
 }
 
 //  xy指定して文字列を描画する（白固定）
-void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font) {
+void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font) {
     SSD1306.CurrentX = x;
     SSD1306.CurrentY = y;
     ssd1306_WriteString(str, Font, White);
 }
 
 //  右揃え描画用に一番右の文字のxyを指定して文字列を描画する（白固定）
-void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font) {
+void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font) {
     SSD1306.CurrentX = x - Font.FontWidth * (str.length() - 1);
     SSD1306.CurrentY = y;
     ssd1306_WriteString(str, Font, White);

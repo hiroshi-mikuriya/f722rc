@@ -1,4 +1,5 @@
 #include "tuner.hpp"
+#include "cmsis_os.h"
 #include "lib_filter.hpp"
 #include "ssd1306.hpp"
 #include <cmath>
@@ -31,8 +32,8 @@ uint32_t corrArray[inDataSize / 2]; // correlation(相間) 配列
 uint32_t maxCorr = 0;               // correlation(相間) 最大値
 uint32_t minCorr = UINT32_MAX;      // correlation(相間) 最小値
 
-uint16_t estimatedIndex = minPeriod; // 推定周期 サンプル数
-float estimatedFreq = 999.0f;        // 推定周波数
+uint16_t estimatedIdx = minPeriod; // 推定周期 サンプル数
+float estimatedFreq = 999.0f;      // 推定周波数
 
 // 周波数算出 --------------------------------------------------------
 void estimateFreq(float inData[]) {
@@ -44,13 +45,13 @@ void estimateFreq(float inData[]) {
      * それぞれについて相関値を調べ、整数倍全てに深い谷がある(allStrong)場合の除数を採用する
      */
     uint32_t subThreshold = 0.3f * (float)maxCorr; // 谷の強さ判定閾値
-    uint16_t maxDiv = estimatedIndex / minPeriod;  // 除数最大値
+    uint16_t maxDiv = estimatedIdx / minPeriod;    // 除数最大値
     uint16_t estimatedDiv = 1;                     // 採用する除数
     for (int16_t div = maxDiv; div != 0; div--) {
         bool allStrong = true;
 
         for (uint16_t k = 1; k != div; k++) {
-            uint16_t subPeriod = estimatedIndex * k / (float)div;
+            uint16_t subPeriod = estimatedIdx * k / (float)div;
             if (corrArray[subPeriod] > subThreshold) {
                 allStrong = false;
                 break;
@@ -64,27 +65,27 @@ void estimateFreq(float inData[]) {
     }
 
     // ゼロクロス（-→+） スタート点 検出
-    uint16_t startIndex = 1;
-    while (startIndex < inDataSize) {
-        if (inData[startIndex - 1] <= 0.0f && inData[startIndex] > 0.0f)
+    uint16_t startIdx = 1;
+    while (startIdx < inDataSize) {
+        if (inData[startIdx - 1] <= 0.0f && inData[startIdx] > 0.0f)
             break;
-        startIndex++;
+        startIdx++;
     }
-    float dy = inData[startIndex] - inData[startIndex - 1]; // 線形補間 y
-    float dx1 = -inData[startIndex - 1] / dy;               // 線形補間 x1
+    float dy = inData[startIdx] - inData[startIdx - 1]; // 線形補間 y
+    float dx1 = -inData[startIdx - 1] / dy;             // 線形補間 x1
 
     // ゼロクロス（-→+） 目的の点 検出
-    uint16_t nextIndex = estimatedIndex - 1;
-    while (nextIndex < inDataSize) {
-        if (inData[nextIndex - 1] <= 0.0f && inData[nextIndex] > 0.0f)
+    uint16_t nextIdx = estimatedIdx - 1;
+    while (nextIdx < inDataSize) {
+        if (inData[nextIdx - 1] <= 0.0f && inData[nextIdx] > 0.0f)
             break;
-        nextIndex++;
+        nextIdx++;
     }
-    dy = inData[nextIndex] - inData[nextIndex - 1]; // 線形補間 y
-    float dx2 = -inData[nextIndex - 1] / dy;        // 線形補間 x2
+    dy = inData[nextIdx] - inData[nextIdx - 1]; // 線形補間 y
+    float dx2 = -inData[nextIdx - 1] / dy;      // 線形補間 x2
 
-    float estimatedPeriod = (nextIndex - startIndex) + (dx2 - dx1); // 推定周期
-    estimatedPeriod = estimatedPeriod / (float)estimatedDiv;        // 予め計算した除数で割る
+    float estimatedPeriod = (nextIdx - startIdx) + (dx2 - dx1); // 推定周期
+    estimatedPeriod = estimatedPeriod / (float)estimatedDiv;    // 予め計算した除数で割る
 
     // 推定周波数が3回連続で近い値となった時に周波数確定
     static float tmpFreq[3] = {}; // 推定周波数 一時保管用
@@ -132,8 +133,8 @@ void bitstreamAutocorrelation(uint16_t startCnt, uint32_t bitData[]) {
         corrArray[pos] = corr;             // correlation(相間) 配列
         maxCorr = std::max(maxCorr, corr); // 最大値を記録
         if (corr < minCorr) {
-            minCorr = corr;       // 最小値を記録
-            estimatedIndex = pos; // 相間が最小となる時の位置→周期計算に利用
+            minCorr = corr;     // 最小値を記録
+            estimatedIdx = pos; // 相間が最小となる時の位置→周期計算に利用
         }
     }
 }
@@ -176,7 +177,7 @@ void tunerProcess(float xL[], float xR[]) {
     bitstreamAutocorrelation(inDataCnt / 2, bitStream[!arraySel]);
 
     // 入力音配列とビットストリーム配列を準備 //////////////////////////////////////
-    for (uint16_t i = 0; i < BLOCK_SIZE; i++) {
+    for (uint32_t i = 0; i < BLOCK_SIZE; i++) {
         fxL[i] = lpf.process(xL[i]);
 
         bitStreamSet(inDataCnt, fxL[i], inData[arraySel], bitStream[arraySel]);
@@ -210,7 +211,7 @@ void tunerDisp() {
 
     // 周波数表示
     if (estimatedFreq < 1000.0f && estimatedFreq > 10.0f) {
-        string freqStr = std::to_string((uint16_t)(100.0f * estimatedFreq)); // 周波数文字列
+        std::string freqStr = std::to_string((uint16_t)(100.0f * estimatedFreq)); // 周波数文字列
         if (estimatedFreq < 100.0f)
             freqStr.insert(2, "."); // 小数点を挿入
         else
@@ -327,7 +328,7 @@ void tunerDisp() {
     }
 
     // 音名を描画
-    const string note[13] = { "D", "D", "E", "F", "F", "G", "G", "A", "A", "B", "C", "C", "" };
+    constexpr char const* note[13] = { "D", "D", "E", "F", "F", "G", "G", "A", "A", "B", "C", "C", "" };
     ssd1306_xyWriteStrWT(55, 40, note[noteNum], Font_16x26);
 
     // シャープを描画
@@ -336,5 +337,5 @@ void tunerDisp() {
     }
 
     ssd1306_xyWriteStrWT(0, 0, "TUNER", Font_7x10); // 左上の表示
-    HAL_Delay(100);
+    osDelay(100);
 }

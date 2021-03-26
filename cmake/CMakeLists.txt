@@ -85,6 +85,8 @@ set(RTOS ${ROOT}/Middlewares/Third_Party/FreeRTOS/Source)
 # header include path
 ##########
 include_directories(
+	${CORE}/fx
+	${CORE}/user
 	${CORE}/Inc
 	${DRIVER}/Inc
 	${CMSIS}/Device/ST/STM32F7xx/Include
@@ -98,6 +100,9 @@ include_directories(
 # source files
 ##########
 file(GLOB SRCS
+	${CORE}/fx/*.cpp
+	${CORE}/user/*.c
+	${CORE}/user/*.cpp
 	${CORE}/Src/*.c
 	${CORE}/Src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/startup_stm32f722xx.s

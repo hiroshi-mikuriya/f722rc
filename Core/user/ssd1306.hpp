@@ -14,7 +14,6 @@
 #include "fonts.h"
 #include "stm32f7xx_hal.h"
 #include <string>
-using std::string;
 
 // I2c address
 #ifndef SSD1306_I2C_ADDR
@@ -52,9 +51,9 @@ void ssd1306_UpdateScreen(I2C_HandleTypeDef* hi2c);
 void ssd1306_Fill(SSD1306_COLOR color);
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
 char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color);
-char ssd1306_WriteString(string strn, FontDef Font, SSD1306_COLOR color);
+char ssd1306_WriteString(std::string strn, FontDef Font, SSD1306_COLOR color);
 void ssd1306_SetCursor(uint8_t x, uint8_t y);
 void ssd1306_InvertColors(void);
-void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font);
-void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, string str, FontDef Font);
+void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font);
+void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font);
 void ssd1306_InvertPixel(uint8_t x, uint8_t y);
