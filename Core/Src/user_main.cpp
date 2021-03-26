@@ -89,15 +89,15 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
   ssd1306_UpdateScreen(&hi2c1);
 
   // LED点灯確認
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+  LL_GPIO_SetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
   HAL_Delay(300);
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+  LL_GPIO_ResetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
+  LL_GPIO_SetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
   HAL_Delay(300);
-  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_SET);
+  LL_GPIO_ResetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+  LL_GPIO_SetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
   HAL_Delay(300);
-  HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_RESET);
+  LL_GPIO_ResetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
 #endif
 
     // I2SのDMA開始
@@ -105,9 +105,9 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
     HAL_I2S_Receive_DMA(&hi2s3, (uint16_t*)RxBuffer, BLOCK_SIZE * 4);
 
     // オーディオコーデック リセット
-    HAL_GPIO_WritePin(CODEC_RST_GPIO_Port, CODEC_RST_Pin, GPIO_PIN_RESET);
+    LL_GPIO_ResetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
     HAL_Delay(100);
-    HAL_GPIO_WritePin(CODEC_RST_GPIO_Port, CODEC_RST_Pin, GPIO_PIN_SET);
+    LL_GPIO_SetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
     HAL_Delay(100);
 
     // I2Sのフレームエラー発生の場合、リセットを繰り返す
@@ -115,9 +115,9 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
         ssd1306_SetCursor(0, 0);
         ssd1306_WriteString("ERROR", Font_11x18, Black);
         ssd1306_UpdateScreen(&hi2c1);
-        HAL_GPIO_WritePin(CODEC_RST_GPIO_Port, CODEC_RST_Pin, GPIO_PIN_RESET);
+        LL_GPIO_ResetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
         HAL_Delay(100);
-        HAL_GPIO_WritePin(CODEC_RST_GPIO_Port, CODEC_RST_Pin, GPIO_PIN_SET);
+        LL_GPIO_SetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
         HAL_Delay(100);
     }
 
@@ -234,17 +234,17 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
     uint8_t g = (fxColorList[fxNum] >> 3) & 0b0000000011111100;
     uint8_t b = (fxColorList[fxNum] << 3) & 0b0000000011111000;
     if (r && fxOn)
-        HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+        LL_GPIO_SetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
     else
-        HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+        LL_GPIO_ResetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
     if (g && fxOn)
-        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+        LL_GPIO_SetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     else
-        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+        LL_GPIO_ResetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     if (b && fxOn)
-        HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_SET);
+        LL_GPIO_SetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
     else
-        HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_RESET);
+        LL_GPIO_ResetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
 }
 
 void mute() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<エフェクト切替時、データ保存時のミュート
