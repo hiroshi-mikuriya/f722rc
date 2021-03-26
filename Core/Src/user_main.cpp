@@ -79,23 +79,23 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
     // ディスプレイ初期化
     ssd1306_Init(&hi2c1);
 
-#if 0
-  // ディスプレイ点灯確認
-  ssd1306_Fill(White);
-  ssd1306_SetCursor(3, 22);
-  ssd1306_WriteString(PEDAL_NAME, Font_11x18, Black);
-  ssd1306_UpdateScreen(&hi2c1);
+#if 1
+    // ディスプレイ点灯確認
+    ssd1306_Fill(White);
+    ssd1306_SetCursor(3, 22);
+    ssd1306_WriteString(PEDAL_NAME, Font_11x18, Black);
+    ssd1306_UpdateScreen(&hi2c1);
 
-  // LED点灯確認
-  LL_GPIO_SetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
-  osDelay(300);
-  LL_GPIO_ResetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
-  LL_GPIO_SetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-  osDelay(300);
-  LL_GPIO_ResetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-  LL_GPIO_SetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
-  osDelay(300);
-  LL_GPIO_ResetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
+    // LED点灯確認
+    LL_GPIO_SetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
+    osDelay(300);
+    LL_GPIO_ResetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
+    LL_GPIO_SetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    osDelay(300);
+    LL_GPIO_ResetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    LL_GPIO_SetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
+    osDelay(300);
+    LL_GPIO_ResetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
 #endif
 
     // I2SのDMA開始
@@ -120,9 +120,9 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
     }
 
     // 起動時フットスイッチ、左上スイッチ、右下スイッチを押していた場合、データ全消去
-    if (!HAL_GPIO_ReadPin(SW0_UPPER_L_GPIO_Port, SW0_UPPER_L_Pin) &&
-        !HAL_GPIO_ReadPin(SW3_LOWER_R_GPIO_Port, SW3_LOWER_R_Pin) &&
-        !HAL_GPIO_ReadPin(SW4_FOOT_GPIO_Port, SW4_FOOT_Pin)) {
+    if (!LL_GPIO_IsInputPinSet(SW0_UPPER_L_GPIO_Port, SW0_UPPER_L_Pin) &&
+        !LL_GPIO_IsInputPinSet(SW3_LOWER_R_GPIO_Port, SW3_LOWER_R_Pin) &&
+        !LL_GPIO_IsInputPinSet(SW4_FOOT_GPIO_Port, SW4_FOOT_Pin)) {
         ssd1306_SetCursor(0, 0);
         ssd1306_WriteString("ERASE ALL DATA", Font_7x10, Black);
         ssd1306_UpdateScreen(&hi2c1);
@@ -266,7 +266,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
 
     switch (num) {
     case 0: // 左上スイッチ --------------------------------------------------------
-        if (!HAL_GPIO_ReadPin(SW0_UPPER_L_GPIO_Port, SW0_UPPER_L_Pin)) {
+        if (!LL_GPIO_IsInputPinSet(SW0_UPPER_L_GPIO_Port, SW0_UPPER_L_Pin)) {
             swCount[num]++;
             if (swCount[num] == longPushCount) // 長押し 1回のみ動作
             {
@@ -297,7 +297,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
         }
         break;
     case 1: // 左下スイッチ --------------------------------------------------------
-        if (!HAL_GPIO_ReadPin(SW1_LOWER_L_GPIO_Port, SW1_LOWER_L_Pin)) {
+        if (!LL_GPIO_IsInputPinSet(SW1_LOWER_L_GPIO_Port, SW1_LOWER_L_Pin)) {
             swCount[num]++;
             if (swCount[num] == longPushCount) // 長押し 1回のみ動作
             {
@@ -328,7 +328,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
         }
         break;
     case 2: // 右上スイッチ --------------------------------------------------------
-        if (!HAL_GPIO_ReadPin(SW2_UPPER_R_GPIO_Port, SW2_UPPER_R_Pin)) {
+        if (!LL_GPIO_IsInputPinSet(SW2_UPPER_R_GPIO_Port, SW2_UPPER_R_Pin)) {
             swCount[num]++;
             if (swCount[num] >= longPushCount / 2 && (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
             {
@@ -355,7 +355,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
         }
         break;
     case 3: // 右下スイッチ --------------------------------------------------------
-        if (!HAL_GPIO_ReadPin(SW3_LOWER_R_GPIO_Port, SW3_LOWER_R_Pin)) {
+        if (!LL_GPIO_IsInputPinSet(SW3_LOWER_R_GPIO_Port, SW3_LOWER_R_Pin)) {
             swCount[num]++;
             if (swCount[num] >= longPushCount / 2 && (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
             {
@@ -393,7 +393,7 @@ void footSwProcess() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<フットス�
     static uint32_t footSwCount = 0; // スイッチが押されている間カウントアップ
     static float tmpTapTime = 0;     // タップ間隔時間 一時保存用
 
-    if (!HAL_GPIO_ReadPin(SW4_FOOT_GPIO_Port, SW4_FOOT_Pin)) {
+    if (!LL_GPIO_IsInputPinSet(SW4_FOOT_GPIO_Port, SW4_FOOT_Pin)) {
         footSwCount++;
         if (mode == TAP && footSwCount == 4 * shortPushCount) // スイッチを押した時のタップ間隔時間を記録
         {
