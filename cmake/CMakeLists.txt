@@ -47,7 +47,7 @@ add_compile_options(-MMD)
 add_compile_options(-MP)
 
 set(CMAKE_C_FLAGS -std=gnu99)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS -fno-use-cxa-atexit)
 set(CMAKE_AS_FLAGS "-x assembler-with-cpp")
 
@@ -79,6 +79,7 @@ set(ROOT ..)
 set(CORE ${ROOT}/Core)
 set(DRIVER ${ROOT}/Drivers/STM32F7xx_HAL_Driver)
 set(CMSIS ${ROOT}/Drivers/CMSIS)
+set(RTOS ${ROOT}/Middlewares/Third_Party/FreeRTOS/Source)
 
 ##########
 # header include path
@@ -88,6 +89,9 @@ include_directories(
 	${DRIVER}/Inc
 	${CMSIS}/Device/ST/STM32F7xx/Include
 	${CMSIS}/Include
+	${RTOS}/include
+	${RTOS}/CMSIS_RTOS
+	${RTOS}/portable/GCC/ARM_CM7/r0p1
 )
 
 ##########
@@ -98,6 +102,10 @@ file(GLOB SRCS
 	${CORE}/Src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/startup_stm32f722xx.s
 	${DRIVER}/Src/*.c
+	${RTOS}/*.c
+	${RTOS}/CMSIS_RTOS/*.c
+	${RTOS}/portable/MemMang/*.c
+	${RTOS}/portable/GCC/ARM_CM7/r0p1/*.c
 )
 
 ##########

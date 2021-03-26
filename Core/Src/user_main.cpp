@@ -1,4 +1,5 @@
 #include "user_main.h"
+#include "cmsis_os.h"
 #include "common.h"
 #include "fx.hpp"
 #include "main.h"
@@ -90,13 +91,13 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
 
   // LED点灯確認
   LL_GPIO_SetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
-  HAL_Delay(300);
+  osDelay(300);
   LL_GPIO_ResetOutputPin(LED_RED_GPIO_Port, LED_RED_Pin);
   LL_GPIO_SetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-  HAL_Delay(300);
+  osDelay(300);
   LL_GPIO_ResetOutputPin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
   LL_GPIO_SetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
-  HAL_Delay(300);
+  osDelay(300);
   LL_GPIO_ResetOutputPin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
 #endif
 
@@ -106,9 +107,9 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
 
     // オーディオコーデック リセット
     LL_GPIO_ResetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
-    HAL_Delay(100);
+    osDelay(100);
     LL_GPIO_SetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
-    HAL_Delay(100);
+    osDelay(100);
 
     // I2Sのフレームエラー発生の場合、リセットを繰り返す
     while (__HAL_I2S_GET_FLAG(&hi2s2, I2S_FLAG_FRE) || __HAL_I2S_GET_FLAG(&hi2s3, I2S_FLAG_FRE)) {
@@ -116,9 +117,9 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
         ssd1306_WriteString("ERROR", Font_11x18, Black);
         ssd1306_UpdateScreen(&hi2c1);
         LL_GPIO_ResetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
-        HAL_Delay(100);
+        osDelay(100);
         LL_GPIO_SetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
-        HAL_Delay(100);
+        osDelay(100);
     }
 
     // 起動時フットスイッチ、左上スイッチ、右下スイッチを押していた場合、データ全消去
@@ -129,7 +130,7 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
         ssd1306_WriteString("ERASE ALL DATA", Font_7x10, Black);
         ssd1306_UpdateScreen(&hi2c1);
         eraseData();
-        HAL_Delay(1000);
+        osDelay(1000);
     }
 
     // 保存済パラメータ読込
@@ -226,7 +227,7 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
 
     // 画面更新------------------------------
     ssd1306_UpdateScreen(&hi2c1);
-    // HAL_Delay(10);
+    // osDelay(10);
 
     // LED表示------------------------------
     uint8_t r = (fxColorList[fxNum] >> 8) &
