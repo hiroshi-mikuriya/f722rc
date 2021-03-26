@@ -14,7 +14,7 @@ set(FLOAT_ABI -mfloat-abi=hard)
 ##########
 # project name
 ##########
-project(Sodium_example)
+project(f722rc)
 
 set(EXE_NAME ${PROJECT_NAME}_${CHIP})
 set(ELF_FILE ${EXE_NAME}.elf)
