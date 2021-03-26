@@ -3,6 +3,7 @@
 #include "fx.hpp"
 #include "main.h"
 #include "ssd1306.hpp"
+#include <cmath>
 
 #if TUNER_ENABLED
 #include "tuner.hpp"
@@ -345,7 +346,8 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
             if (swCount[num] >= longPushCount / 2 &&
                 (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
             {
-                fxParam[fxParamIndex] = min(fxParam[fxParamIndex] + 10, fxParamMax[fxParamIndex]);
+                fxParam[fxParamIndex] =
+                    std::min<int32_t>(fxParam[fxParamIndex] + 10, fxParamMax[fxParamIndex]);
             }
         }
         else {
@@ -367,7 +369,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
                 }
                 else
                     fxParam[fxParamIndex] =
-                        min(fxParam[fxParamIndex] + 1, fxParamMax[fxParamIndex]);
+                        std::min<int32_t>(fxParam[fxParamIndex] + 1, fxParamMax[fxParamIndex]);
             }
             swCount[num] = 0;
         }
@@ -380,7 +382,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
             {
                 {
                     fxParam[fxParamIndex] =
-                        max(fxParam[fxParamIndex] - 10, fxParamMin[fxParamIndex]);
+                        std::max<int32_t>(fxParam[fxParamIndex] - 10, fxParamMin[fxParamIndex]);
                 }
             }
         }
@@ -403,7 +405,7 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
                 }
                 else
                     fxParam[fxParamIndex] =
-                        max(fxParam[fxParamIndex] - 1, fxParamMin[fxParamIndex]);
+                        std::max<int32_t>(fxParam[fxParamIndex] - 1, fxParamMin[fxParamIndex]);
             }
             swCount[num] = 0;
         }
@@ -512,7 +514,9 @@ void mainProcess(uint16_t start_sample) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     if (mode == NORMAL) {
         swProcess(
             callbackCount % 4); // 割り込みごとにスイッチ処理するが、スイッチ1つずつを順番に行う
-        cpuUsageCycleMax[fxNum] = max(cpuUsageCycleMax[fxNum], DWT->CYCCNT); // CPU使用率計算用
+        const uint32_t cyccnt = DWT->CYCCNT;
+        cpuUsageCycleMax[fxNum] =
+            std::max<uint32_t>(cpuUsageCycleMax[fxNum], cyccnt); // CPU使用率計算用
     }
     if (fxChangeFlag)
         fxChange(); // エフェクト変更

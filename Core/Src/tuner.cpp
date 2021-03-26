@@ -1,6 +1,7 @@
 #include "tuner.hpp"
 #include "lib_filter.hpp"
 #include "ssd1306.hpp"
+#include <cmath>
 
 /*
  * ギター チューナー(ベースでの動作未確認)
@@ -130,8 +131,8 @@ void bitstreamAutocorrelation(uint16_t startCnt, uint32_t bitData[]) {
             index++;
         }
 
-        corrArray[pos] = corr;        // correlation(相間) 配列
-        maxCorr = max(maxCorr, corr); // 最大値を記録
+        corrArray[pos] = corr;             // correlation(相間) 配列
+        maxCorr = std::max(maxCorr, corr); // 最大値を記録
         if (corr < minCorr) {
             minCorr = corr;       // 最小値を記録
             estimatedIndex = pos; // 相間が最小となる時の位置→周期計算に利用

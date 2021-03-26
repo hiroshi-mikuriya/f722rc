@@ -52,17 +52,6 @@ constexpr float MAX_TAP_TIME = 3000.0f;
 // 円周率
 constexpr float PI = 3.14159265359f;
 
-// 最小値、最大値、絶対値関数
-#ifndef min
-#define min(x, a) ((x) < (a) ? (x) : (a))
-#endif
-#ifndef max
-#define max(x, b) ((x) > (b) ? (x) : (b))
-#endif
-#ifndef abs
-#define abs(x) ((x) > 0 ? (x) : -(x))
-#endif
-
 // 最小値a、最大値bでクリップ
 #define clip(x, a, b) (((x) < (a) ? (a) : (x)) > (b) ? (b) : ((x) < (a) ? (a) : (x)))
 
