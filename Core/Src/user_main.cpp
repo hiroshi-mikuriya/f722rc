@@ -25,25 +25,22 @@ const float i2sInterruptInterval = (float)BLOCK_SIZE / SAMPLING_FREQ; // I2Sの�
 
 // スイッチ短押し、スイッチ長押し、ステータス情報表示時間のカウント数
 const uint32_t shortPushCount =
-    1 + SHORT_PUSH_MSEC /
-            (4 * 1000 * i2sInterruptInterval); // 1つのスイッチは4回に1回の読取のため4をかける
+    1 + SHORT_PUSH_MSEC / (4 * 1000 * i2sInterruptInterval); // 1つのスイッチは4回に1回の読取のため4をかける
 const uint32_t longPushCount = 1 + LONG_PUSH_MSEC / (4 * 1000 * i2sInterruptInterval);
 const uint32_t statusDispCount = 1 + STATUS_DISP_MSEC / (1000 * i2sInterruptInterval);
 
-int16_t fxParam[20] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1 };                    // 現在のエフェクトパラメータ
+int16_t fxParam[20] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }; // 現在のエフェクトパラメータ
 string fxParamStr[20] = {}; // 現在のエフェクトパラメータ数値 文字列
 
-int16_t fxParamMax[20] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1 };                     // エフェクトパラメータ最大値
+int16_t fxParamMax[20] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }; // エフェクトパラメータ最大値
 int16_t fxParamMin[20] = {}; // エフェクトパラメータ最小値
 
 string fxParamName[20] = {}; // エフェクトパラメータ名 LEVEL, GAIN等
 
-uint8_t fxParamIndex = 0; // エフェクトパラメータ 現在何番目か ※0から始まる
+uint8_t fxParamIndex = 0;    // エフェクトパラメータ 現在何番目か ※0から始まる
 uint8_t fxParamIndexMax = 0; // エフェクトパラメータ数 最大値-1
 
-uint8_t fxNum = 0; // 現在のエフェクト番号
+uint8_t fxNum = 0;       // 現在のエフェクト番号
 int8_t fxChangeFlag = 0; // エフェクト種類変更フラグ 次エフェクトへ: 1 前エフェクトへ: -1
 
 int16_t fxAllData[MAX_FX_NUM][20] = {}; // 全てのエフェクトパラメータデータ配列
@@ -140,8 +137,7 @@ void mainInit() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<最初に1回の�
     for (int i = 0; i < MAX_FX_NUM; i++) {
         if (fxEnabled[fxNum])
             break; // エフェクト有効の時は処理終了、無効の時は次のエフェクトへ
-        fxNum =
-            (fxNum + 1) % MAX_FX_NUM; // 最大値→最小値で循環 全エフェクト無効なら最初のfxNumに戻る
+        fxNum = (fxNum + 1) % MAX_FX_NUM; // 最大値→最小値で循環 全エフェクト無効なら最初のfxNumに戻る
     }
     fxInit();
 }
@@ -156,8 +152,7 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
         uint8_t fxPage = fxParamIndex / 6; // エフェクトパラメータページ番号
 
         // ステータス表示------------------------------
-        if (callbackCount >
-            statusDispCount) // ステータス表示が変わり一定時間経過後、デフォルト表示に戻す
+        if (callbackCount > statusDispCount) // ステータス表示が変わり一定時間経過後、デフォルト表示に戻す
         {
             statusStr = fxNameList[fxNum]; // エフェクト名表示
         }
@@ -165,15 +160,13 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
 
         // エフェクトパラメータ名称表示------------------------------
         for (int i = 0; i < 6; i++) {
-            ssd1306_xyWriteStrWT(
-                fxParamNameXY[i][0], fxParamNameXY[i][1], fxParamName[i + 3 * fxPage], Font_7x10);
+            ssd1306_xyWriteStrWT(fxParamNameXY[i][0], fxParamNameXY[i][1], fxParamName[i + 3 * fxPage], Font_7x10);
         }
 
         // エフェクトパラメータ数値表示------------------------------
         for (int i = 0; i < 6; i++) {
             fxSetParamStr(i + 6 * fxPage); // パラメータ数値を文字列に変換
-            ssd1306_R_xyWriteStrWT(
-                fxParamStrXY[i][0], fxParamStrXY[i][1], fxParamStr[i + 3 * fxPage], Font_11x18);
+            ssd1306_R_xyWriteStrWT(fxParamStrXY[i][0], fxParamStrXY[i][1], fxParamStr[i + 3 * fxPage], Font_11x18);
         }
 
         // エフェクトパラメータページ番号表示------------------------------
@@ -183,14 +176,12 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
         // カーソル表示(選択したパラメータの白黒反転) ------------------------------
         for (int i = 0; i < 62; i++) {
             for (int j = 0; j < 16; j++) {
-                ssd1306_InvertPixel(cursorPositionXY[cursorPosition][0] + i,
-                    cursorPositionXY[cursorPosition][1] + j);
+                ssd1306_InvertPixel(cursorPositionXY[cursorPosition][0] + i, cursorPositionXY[cursorPosition][1] + j);
             }
         }
 
         // CPU使用率表示------------------------------
-        uint8_t cpuUsagePercent =
-            100.0f * cpuUsageCycleMax[fxNum] / SystemCoreClock / i2sInterruptInterval;
+        uint8_t cpuUsagePercent = 100.0f * cpuUsageCycleMax[fxNum] / SystemCoreClock / i2sInterruptInterval;
         string percentStr = std::to_string(cpuUsagePercent);
         if (cpuUsagePercent < 10)
             percentStr = " " + percentStr + "%"; // 右揃えにする
@@ -208,7 +199,7 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
             tmpStr = std::to_string((uint16_t)(60000.0f / tapTime));  // bpmを計算
         ssd1306_R_xyWriteStrWT(103, 20, tmpStr + " bpm", Font_16x26); // bpm表示
 
-        uint16_t blinkCount = 1 + tapTime / (1000 * i2sInterruptInterval); // 点滅用カウント数
+        uint16_t blinkCount = 1 + tapTime / (1000 * i2sInterruptInterval);   // 点滅用カウント数
         if (callbackCount % blinkCount < 60 / (1000 * i2sInterruptInterval)) // 60msバーを表示、点滅
         {
             for (int i = 0; i < 112; i++) {
@@ -230,8 +221,7 @@ void mainLoop() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<メインループ
     // osDelay(10);
 
     // LED表示------------------------------
-    uint8_t r = (fxColorList[fxNum] >> 8) &
-                0b0000000011111000; // RGB565を変換 PWMで色を制御する場合使えるかも
+    uint8_t r = (fxColorList[fxNum] >> 8) & 0b0000000011111000; // RGB565を変換 PWMで色を制御する場合使えるかも
     uint8_t g = (fxColorList[fxNum] >> 3) & 0b0000000011111100;
     uint8_t b = (fxColorList[fxNum] << 3) & 0b0000000011111000;
     if (r && fxOn)
@@ -291,11 +281,9 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
             }
         }
         else {
-            if (swCount[num] >= shortPushCount &&
-                swCount[num] < longPushCount) // 短押し 離した時の処理
+            if (swCount[num] >= shortPushCount && swCount[num] < longPushCount) // 短押し 離した時の処理
             {
-                if (swCount[num + 2] >
-                    shortPushCount) // 右上スイッチが押されている場合、パラメータ数値を最大値へ
+                if (swCount[num + 2] > shortPushCount) // 右上スイッチが押されている場合、パラメータ数値を最大値へ
                 {
                     swCount[num + 2] = longPushCount + 1; // 右上スイッチは長押し済み扱いにする
                     fxParam[fxParamIndex] = fxParamMax[fxParamIndex];
@@ -324,11 +312,9 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
             }
         }
         else {
-            if (swCount[num] >= shortPushCount &&
-                swCount[num] < longPushCount) // 短押し 離した時の処理
+            if (swCount[num] >= shortPushCount && swCount[num] < longPushCount) // 短押し 離した時の処理
             {
-                if (swCount[num + 2] >
-                    shortPushCount) // 右下スイッチが押されている場合、パラメータ数値を最小値へ
+                if (swCount[num + 2] > shortPushCount) // 右下スイッチが押されている場合、パラメータ数値を最小値へ
                 {
                     swCount[num + 2] = longPushCount + 1; // 右下スイッチは長押し済み扱いにする
                     fxParam[fxParamIndex] = fxParamMin[fxParamIndex];
@@ -344,33 +330,26 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
     case 2: // 右上スイッチ --------------------------------------------------------
         if (!HAL_GPIO_ReadPin(SW2_UPPER_R_GPIO_Port, SW2_UPPER_R_Pin)) {
             swCount[num]++;
-            if (swCount[num] >= longPushCount / 2 &&
-                (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
+            if (swCount[num] >= longPushCount / 2 && (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
             {
-                fxParam[fxParamIndex] =
-                    std::min<int32_t>(fxParam[fxParamIndex] + 10, fxParamMax[fxParamIndex]);
+                fxParam[fxParamIndex] = std::min<int32_t>(fxParam[fxParamIndex] + 10, fxParamMax[fxParamIndex]);
             }
         }
         else {
-            if (swCount[num] >= shortPushCount &&
-                swCount[num] < longPushCount) // 短押し 離した時の処理
+            if (swCount[num] >= shortPushCount && swCount[num] < longPushCount) // 短押し 離した時の処理
             {
-                if (swCount[num + 1] >
-                    shortPushCount) // 右下スイッチが押されている場合、パラメータ数値を中間値へ
+                if (swCount[num + 1] > shortPushCount) // 右下スイッチが押されている場合、パラメータ数値を中間値へ
                 {
                     swCount[num + 1] = longPushCount + 1; // 右下スイッチは長押し済み扱いにする
-                    fxParam[fxParamIndex] =
-                        (fxParamMin[fxParamIndex] + fxParamMax[fxParamIndex]) / 2;
+                    fxParam[fxParamIndex] = (fxParamMin[fxParamIndex] + fxParamMax[fxParamIndex]) / 2;
                 }
-                else if (swCount[num - 2] >
-                         shortPushCount) // 左上スイッチが押されている場合、パラメータ数値を最大値へ
+                else if (swCount[num - 2] > shortPushCount) // 左上スイッチが押されている場合、パラメータ数値を最大値へ
                 {
                     swCount[num - 2] = longPushCount + 1; // 左上スイッチは長押し済み扱いにする
                     fxParam[fxParamIndex] = fxParamMax[fxParamIndex];
                 }
                 else
-                    fxParam[fxParamIndex] =
-                        std::min<int32_t>(fxParam[fxParamIndex] + 1, fxParamMax[fxParamIndex]);
+                    fxParam[fxParamIndex] = std::min<int32_t>(fxParam[fxParamIndex] + 1, fxParamMax[fxParamIndex]);
             }
             swCount[num] = 0;
         }
@@ -378,35 +357,28 @@ void swProcess(uint8_t num) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<スイ
     case 3: // 右下スイッチ --------------------------------------------------------
         if (!HAL_GPIO_ReadPin(SW3_LOWER_R_GPIO_Port, SW3_LOWER_R_Pin)) {
             swCount[num]++;
-            if (swCount[num] >= longPushCount / 2 &&
-                (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
+            if (swCount[num] >= longPushCount / 2 && (swCount[num] % (longPushCount / 4)) == 0) // 長押し 繰り返し動作
             {
                 {
-                    fxParam[fxParamIndex] =
-                        std::max<int32_t>(fxParam[fxParamIndex] - 10, fxParamMin[fxParamIndex]);
+                    fxParam[fxParamIndex] = std::max<int32_t>(fxParam[fxParamIndex] - 10, fxParamMin[fxParamIndex]);
                 }
             }
         }
         else {
-            if (swCount[num] >= shortPushCount &&
-                swCount[num] < longPushCount) // 短押し 離した時の処理
+            if (swCount[num] >= shortPushCount && swCount[num] < longPushCount) // 短押し 離した時の処理
             {
-                if (swCount[num - 1] >
-                    shortPushCount) // 右上スイッチが押されている場合、パラメータ数値を中間値へ
+                if (swCount[num - 1] > shortPushCount) // 右上スイッチが押されている場合、パラメータ数値を中間値へ
                 {
                     swCount[num - 1] = longPushCount + 1; // 右上スイッチは長押し済み扱いにする
-                    fxParam[fxParamIndex] =
-                        (fxParamMin[fxParamIndex] + fxParamMax[fxParamIndex]) / 2;
+                    fxParam[fxParamIndex] = (fxParamMin[fxParamIndex] + fxParamMax[fxParamIndex]) / 2;
                 }
-                else if (swCount[num - 2] >
-                         shortPushCount) // 左下スイッチが押されている場合、パラメータ数値を最小値へ
+                else if (swCount[num - 2] > shortPushCount) // 左下スイッチが押されている場合、パラメータ数値を最小値へ
                 {
                     swCount[num - 2] = longPushCount + 1; // 左下スイッチは長押し済み扱いにする
                     fxParam[fxParamIndex] = fxParamMin[fxParamIndex];
                 }
                 else
-                    fxParam[fxParamIndex] =
-                        std::max<int32_t>(fxParam[fxParamIndex] - 1, fxParamMin[fxParamIndex]);
+                    fxParam[fxParamIndex] = std::max<int32_t>(fxParam[fxParamIndex] - 1, fxParamMin[fxParamIndex]);
             }
             swCount[num] = 0;
         }
@@ -423,8 +395,7 @@ void footSwProcess() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<フットス�
 
     if (!HAL_GPIO_ReadPin(SW4_FOOT_GPIO_Port, SW4_FOOT_Pin)) {
         footSwCount++;
-        if (mode == TAP &&
-            footSwCount == 4 * shortPushCount) // スイッチを押した時のタップ間隔時間を記録
+        if (mode == TAP && footSwCount == 4 * shortPushCount) // スイッチを押した時のタップ間隔時間を記録
         {
             tmpTapTime = (float)callbackCount * i2sInterruptInterval * 1000.0f;
             callbackCount = 0;
@@ -453,14 +424,11 @@ void footSwProcess() // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<フットス�
         }
     }
     else {
-        if (footSwCount >= 4 * shortPushCount &&
-            footSwCount < 4 * longPushCount) // 短押し 離した時の処理
+        if (footSwCount >= 4 * shortPushCount && footSwCount < 4 * longPushCount) // 短押し 離した時の処理
         {
             if (mode == NORMAL)
                 fxOn = !fxOn;
-            else if (
-                mode ==
-                TAP) { // スイッチを押した時記録していたタップ間隔時間をスイッチを離した時に反映させる
+            else if (mode == TAP) { // スイッチを押した時記録していたタップ間隔時間をスイッチを離した時に反映させる
                 if (100.0f < tmpTapTime && tmpTapTime < MAX_TAP_TIME)
                     tapTime = tmpTapTime;
                 else
@@ -513,11 +481,9 @@ void mainProcess(uint16_t start_sample) // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     callbackCount++; // I2Sの割り込みごとにカウントアップ タイマとして利用
     footSwProcess(); // フットスイッチ処理
     if (mode == NORMAL) {
-        swProcess(
-            callbackCount % 4); // 割り込みごとにスイッチ処理するが、スイッチ1つずつを順番に行う
+        swProcess(callbackCount % 4); // 割り込みごとにスイッチ処理するが、スイッチ1つずつを順番に行う
         const uint32_t cyccnt = DWT->CYCCNT;
-        cpuUsageCycleMax[fxNum] =
-            std::max<uint32_t>(cpuUsageCycleMax[fxNum], cyccnt); // CPU使用率計算用
+        cpuUsageCycleMax[fxNum] = std::max<uint32_t>(cpuUsageCycleMax[fxNum], cyccnt); // CPU使用率計算用
     }
     if (fxChangeFlag)
         fxChange(); // エフェクト変更

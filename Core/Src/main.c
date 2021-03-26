@@ -167,8 +167,7 @@ void SystemClock_Config(void) {
     /* Wait till HSE is ready */
     while (LL_RCC_HSE_IsReady() != 1) {}
     LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 432, LL_RCC_PLLP_DIV_2);
-    LL_RCC_PLLI2S_ConfigDomain_I2S(
-        LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 271, LL_RCC_PLLI2SR_DIV_3);
+    LL_RCC_PLLI2S_ConfigDomain_I2S(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 271, LL_RCC_PLLI2SR_DIV_3);
     LL_RCC_PLL_Enable();
 
     /* Wait till PLL is ready */

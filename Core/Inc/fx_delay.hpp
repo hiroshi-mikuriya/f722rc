@@ -30,11 +30,10 @@ private:
         P19
     };
     float param[20] = { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const int16_t paramMax[20] = { 1500, 100, 99, 100, 100, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0 };
+    const int16_t paramMax[20] = { 1500, 100, 99, 100, 100, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const int16_t paramMin[20] = { 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const string paramName[20] = { "TIM", "LEVEL", "F.BACK", "TONE", "OUTPUT", "DIV", "", "", "",
-        "", "", "", "", "", "", "", "", "", "", "" };
+    const string paramName[20] = { "TIM", "LEVEL", "F.BACK", "TONE", "OUTPUT", "DIV", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "" };
     const uint8_t paramIndexMax = 5;
 
     // 最大ディレイタイム 16bit モノラルで2.5秒程度まで
@@ -149,8 +148,7 @@ public:
             // ディレイ音と原音をディレイバッファに書き込み、原音はエフェクトオン時のみ書き込む
             del1.write(bypassIn.process(0.0f, xL[i], fxOn) + param[FBACK] * fxL[i]);
 
-            fxL[i] = param[OUTPUT] *
-                     (xL[i] + fxL[i] * param[ELEVEL]); // マスターボリューム ディレイ音レベル
+            fxL[i] = param[OUTPUT] * (xL[i] + fxL[i] * param[ELEVEL]); // マスターボリューム ディレイ音レベル
             xL[i] = bypassOut.process(xL[i], fxL[i], fxOn);
         }
     }

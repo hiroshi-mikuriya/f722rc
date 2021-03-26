@@ -29,11 +29,10 @@ private:
         P19
     };
     float param[20] = { 0.0f, 1.0f, 1.0f, 1.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const int16_t paramMax[20] = { 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0 };
+    const int16_t paramMax[20] = { 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const int16_t paramMin[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const string paramName[20] = { "LEVEL", "RATE", "DEPTH", "WAVE", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "" };
+    const string paramName[20] = { "LEVEL", "RATE", "DEPTH", "WAVE", "", "", "", "", "", "", "", "", "", "", "", "", "",
+        "", "", "" };
     const uint8_t paramIndexMax = 3;
 
     signalSw bypass;

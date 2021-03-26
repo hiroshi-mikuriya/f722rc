@@ -20,7 +20,7 @@ public:
         // std::bad_alloc を使う場合は -fexceptions コンパイルオプションが必要
 
         maxDelaySample = (uint32_t)(SAMPLING_FREQ * maxDelayTime / 1000.0f); // 最大サンプル数計算
-        delayArray = new int16_t[maxDelaySample]; // バッファ配列メモリ確保
+        delayArray = new int16_t[maxDelaySample];                            // バッファ配列メモリ確保
         for (uint32_t i = 0; i < maxDelaySample; i++)
             delayArray[i] = 0; // 配列0埋め
     }
@@ -43,8 +43,7 @@ public:
 
     float read(float delayTime) // 通常のサンプル単位での読み出し
     {
-        uint32_t interval =
-            (uint32_t)(0.001f * delayTime * SAMPLING_FREQ); // 書込位置と読出位置の間隔を計算
+        uint32_t interval = (uint32_t)(0.001f * delayTime * SAMPLING_FREQ); // 書込位置と読出位置の間隔を計算
         if (interval > maxDelaySample)
             interval = maxDelaySample;
         uint32_t rpos; // read position 読出位置
@@ -57,8 +56,7 @@ public:
 
     float readLerp(float delayTime) // 線形補間して読み出し コーラス等に利用
     {
-        float intervalF =
-            0.001f * delayTime * SAMPLING_FREQ; // 書込位置と読出位置の間隔をfloatで計算
+        float intervalF = 0.001f * delayTime * SAMPLING_FREQ; // 書込位置と読出位置の間隔をfloatで計算
         if (intervalF > (float)maxDelaySample)
             intervalF = (float)maxDelaySample;
         float rposF; // read position 読出位置 float
@@ -71,8 +69,7 @@ public:
         if (rpos1 == maxDelaySample)
             rpos1 = 0;
         float t = rposF - (float)rpos0; // 線形補間用係数
-        return ((float)delayArray[rpos0] + t * (float)(delayArray[rpos1] - delayArray[rpos0])) /
-               32767.0f;
+        return ((float)delayArray[rpos0] + t * (float)(delayArray[rpos1] - delayArray[rpos0])) / 32767.0f;
     }
 
     float readFixed() // 固定時間（最大ディレイタイム）で読み出し

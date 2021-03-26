@@ -29,10 +29,8 @@ private:
         P18,
         P19
     };
-    float param[20] = { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0 };
-    const int16_t paramMax[20] = { 100, 100, 99, 100, 100, 100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1 };
+    float param[20] = { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    const int16_t paramMax[20] = { 100, 100, 99, 100, 100, 100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
     const int16_t paramMin[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const string paramName[20] = { "LEVEL", "MIX", "F.BACK", "HiCUT", "LoCUT",
         "HiDUMP"
@@ -113,16 +111,13 @@ public:
             param[FBACK] = (float)fxParam[FBACK] / 200.0f; // Feedback 0～0.495
             break;
         case 3:
-            param[HICUT] =
-                600.0f * logPot(fxParam[HICUT], 20.0f, 0.0f); // HI CUT FREQ 600 ~ 6000 Hz
+            param[HICUT] = 600.0f * logPot(fxParam[HICUT], 20.0f, 0.0f); // HI CUT FREQ 600 ~ 6000 Hz
             break;
         case 4:
-            param[LOCUT] =
-                100.0f * logPot(fxParam[LOCUT], 0.0f, 20.0f); // LOW CUT FREQ 100 ~ 1000 Hz
+            param[LOCUT] = 100.0f * logPot(fxParam[LOCUT], 0.0f, 20.0f); // LOW CUT FREQ 100 ~ 1000 Hz
             break;
         case 5:
-            param[HIDUMP] =
-                600.0f * logPot(fxParam[HIDUMP], 20.0f, 0.0f); // Feedback HI CUT FREQ 600 ~ 6000 Hz
+            param[HIDUMP] = 600.0f * logPot(fxParam[HIDUMP], 20.0f, 0.0f); // Feedback HI CUT FREQ 600 ~ 6000 Hz
             break;
         case 6:
             lpfIn.set(param[HICUT]);

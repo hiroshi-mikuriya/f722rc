@@ -134,8 +134,7 @@ inline float bqSinOmega(float fc) {
     float w;
     if (fc < SAMPLING_FREQ / 10.0f) {
         w = omega(fc);
-        return -0.0000070241321f + 1.00045830f * w - 0.0038841709f * w * w -
-               0.15837971f * w * w * w;
+        return -0.0000070241321f + 1.00045830f * w - 0.0038841709f * w * w - 0.15837971f * w * w * w;
     }
     else if (fc < SAMPLING_FREQ / 4.0f) {
         w = omega(fc);

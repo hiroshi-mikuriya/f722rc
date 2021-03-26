@@ -6,33 +6,12 @@
 
 class fx_phaser : public fx_base {
 private:
-    enum paramName {
-        LEVEL,
-        RATE,
-        STAGE,
-        P3,
-        P4,
-        P5,
-        P6,
-        P7,
-        P8,
-        P9,
-        P10,
-        P11,
-        P12,
-        P13,
-        P14,
-        P15,
-        P16,
-        P17,
-        P18,
-        P19
-    };
+    enum paramName { LEVEL, RATE, STAGE, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19 };
     float param[20] = { 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const int16_t paramMax[20] = { 100, 100, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
     const int16_t paramMin[20] = { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const string paramName[20] = { "LEVEL", "RATE", "STAGE", "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "" };
+    const string paramName[20] = { "LEVEL", "RATE", "STAGE", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+        "", "" };
     const uint8_t paramIndexMax = 2;
 
     signalSw bypass;

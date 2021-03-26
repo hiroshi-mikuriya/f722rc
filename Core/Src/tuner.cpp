@@ -12,16 +12,16 @@
  */
 
 // 各設定
-const float muteOff = 0.0f;   // 0:出力ミュート 1:ミュートしない
-const float freqA = 440.0f;   // 基準A音周波数 Hz
-const float minFreq = 70.0f;  // 最低周波数 ギター 6弦ドロップD音 73Hz
-const float maxFreq = 400.0f; // 最高周波数 ギター 1弦5フレットA音 440Hz
-const float tunerSamplingFreq = SAMPLING_FREQ; // チューナーでのサンプリング周波数
-const uint16_t minPeriod = tunerSamplingFreq / maxFreq; // 最小周期サンプル区間
-const uint16_t maxPeriod = tunerSamplingFreq / minFreq; // 最大周期サンプル区間
+const float muteOff = 0.0f;                                   // 0:出力ミュート 1:ミュートしない
+const float freqA = 440.0f;                                   // 基準A音周波数 Hz
+const float minFreq = 70.0f;                                  // 最低周波数 ギター 6弦ドロップD音 73Hz
+const float maxFreq = 400.0f;                                 // 最高周波数 ギター 1弦5フレットA音 440Hz
+const float tunerSamplingFreq = SAMPLING_FREQ;                // チューナーでのサンプリング周波数
+const uint16_t minPeriod = tunerSamplingFreq / maxFreq;       // 最小周期サンプル区間
+const uint16_t maxPeriod = tunerSamplingFreq / minFreq;       // 最大周期サンプル区間
 const uint16_t inDataSize = 64 * ((maxPeriod * 2) / 64) + 64; // 入力音配列 データ数 64の倍数にする
-const uint16_t bitStreamSize = inDataSize / 32; // ビットストリーム配列 データ数
-const float noiseThrethold = 0.02f;             // ノイズ除去用閾値
+const uint16_t bitStreamSize = inDataSize / 32;               // ビットストリーム配列 データ数
+const float noiseThrethold = 0.02f;                           // ノイズ除去用閾値
 
 // 各変数
 float inData[2][inDataSize] = {};          // 入力音の配列 2つ準備し交互に利用
@@ -84,7 +84,7 @@ void estimateFreq(float inData[]) {
     float dx2 = -inData[nextIndex - 1] / dy;        // 線形補間 x2
 
     float estimatedPeriod = (nextIndex - startIndex) + (dx2 - dx1); // 推定周期
-    estimatedPeriod = estimatedPeriod / (float)estimatedDiv; // 予め計算した除数で割る
+    estimatedPeriod = estimatedPeriod / (float)estimatedDiv;        // 予め計算した除数で割る
 
     // 推定周波数が3回連続で近い値となった時に周波数確定
     static float tmpFreq[3] = {}; // 推定周波数 一時保管用
@@ -105,21 +105,19 @@ void bitstreamAutocorrelation(uint16_t startCnt, uint32_t bitData[]) {
     // pos → minPeriod ～ inDataSize/2 まで相間を計算するが、計算負荷軽減のため分割する
     for (uint16_t pos = startCnt; (pos >= minPeriod) && (pos < startCnt + BLOCK_SIZE / 2); pos++) {
         uint16_t midBitStreamSize = (bitStreamSize / 2) - 1; // ビットストリーム配列データ数の半分
-        uint16_t index = startCnt / 32; // ビットストリーム配列の何番目の整数か
-        uint16_t shift = startCnt % 32; // ビットストリーム配列内の整数 シフト数
-        uint32_t corr = 0;              // correlation(相間)
+        uint16_t index = startCnt / 32;                      // ビットストリーム配列の何番目の整数か
+        uint16_t shift = startCnt % 32;                      // ビットストリーム配列内の整数 シフト数
+        uint32_t corr = 0;                                   // correlation(相間)
 
         if (shift == 0) {
-            for (uint16_t i = 0; i < midBitStreamSize;
-                 i++) { // ^(XOR)、ビットが1になっている所を数え相間を算出
+            for (uint16_t i = 0; i < midBitStreamSize; i++) { // ^(XOR)、ビットが1になっている所を数え相間を算出
                 corr += __builtin_popcount(bitData[i] ^ bitData[i + index]);
             }
         }
         else {
             for (uint16_t i = 0; i < midBitStreamSize; i++) {
                 uint32_t tmp = bitData[i + index] >> shift; // ビットストリーム配列をズラしたもの
-                tmp |= bitData[i + 1 + index]
-                       << (32 - shift); // 右シフトしたものと左シフトしたものを合わせる
+                tmp |= bitData[i + 1 + index] << (32 - shift); // 右シフトしたものと左シフトしたものを合わせる
                 corr += __builtin_popcount(bitData[i] ^ tmp);
             }
         }
@@ -154,8 +152,7 @@ void bitStreamSet(uint16_t cnt, float x, float inData[], uint32_t bitData[]) {
     else if (inData[cnt] > 0.0f)
         val = 1;
     mask = 1 << (cnt % 32);
-    bitData[cnt / 32] ^=
-        (-val ^ bitData[cnt / 32]) & mask; // -val は 111...111 または 000...000（解説省略）
+    bitData[cnt / 32] ^= (-val ^ bitData[cnt / 32]) & mask; // -val は 111...111 または 000...000（解説省略）
 }
 
 // 信号処理 ----------------------------------------------------------------------
@@ -201,14 +198,12 @@ void tunerDisp() {
     const float st = powf(2.0f, 1.0f / 12.0f);      // semitone(半音)
 
     // 周波数のズレ 5段階
-    const float freqError[5] = { powf(cent1, 2), powf(cent1, 14), powf(cent1, 21), powf(cent1, 30),
-        powf(cent1, 50) };
+    const float freqError[5] = { powf(cent1, 2), powf(cent1, 14), powf(cent1, 21), powf(cent1, 30), powf(cent1, 50) };
 
     // D～C#の基準周波数 13個目は該当なしの場合
-    const float noteFreq[13] = { freqA / powf(st, 43), freqA / powf(st, 42), freqA / powf(st, 41),
-        freqA / powf(st, 40), freqA / powf(st, 39), freqA / powf(st, 38), freqA / powf(st, 37),
-        freqA / powf(st, 36), freqA / powf(st, 35), freqA / powf(st, 34), freqA / powf(st, 33),
-        freqA / powf(st, 32), 9999 };
+    const float noteFreq[13] = { freqA / powf(st, 43), freqA / powf(st, 42), freqA / powf(st, 41), freqA / powf(st, 40),
+        freqA / powf(st, 39), freqA / powf(st, 38), freqA / powf(st, 37), freqA / powf(st, 36), freqA / powf(st, 35),
+        freqA / powf(st, 34), freqA / powf(st, 33), freqA / powf(st, 32), 9999 };
 
     // 計算済周波数を一時保存(表示用計算の途中で値が変更されるのを防ぐ)
     float dispFreq = estimatedFreq; // 表示用周波数
@@ -226,8 +221,8 @@ void tunerDisp() {
 
     // 検出周波数の音名、ズレを判別 //////////////////////////////////////////////
 
-    uint8_t noteNum = 12; // 音名番号 0～11(D～C#) 該当なしの場合は12
-    int8_t errorNum = 5;  // ズレがどのくらいか -4～4 該当なしの場合は5
+    uint8_t noteNum = 12;                             // 音名番号 0～11(D～C#) 該当なしの場合は12
+    int8_t errorNum = 5;                              // ズレがどのくらいか -4～4 該当なしの場合は5
     const float pow2[4] = { 1.0f, 2.0f, 4.0f, 8.0f }; // 2の0乗～3乗
     float freqOct = 1.0f;                             // オクターブ計算済の基準周波数
 

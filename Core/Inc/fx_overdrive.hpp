@@ -29,11 +29,10 @@ private:
         P19
     };
     float param[20] = { 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const int16_t paramMax[20] = { 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0 };
+    const int16_t paramMax[20] = { 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const int16_t paramMin[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    const string paramName[20] = { "LEVEL", "GAIN", "TREBLE", "BASS", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "" };
+    const string paramName[20] = { "LEVEL", "GAIN", "TREBLE", "BASS", "", "", "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "" };
     const uint8_t paramIndexMax = 3;
 
     signalSw bypass;
@@ -95,8 +94,7 @@ public:
             param[GAIN] = logPot(fxParam[GAIN], -6.0f, 40.0f); // GAIN -6...+40 dB
             break;
         case 2:
-            param[TREBLE] =
-                10000.0f * logPot(fxParam[TREBLE], -28.0f, 0.0f); // TREBLE LPF 400 ~ 10k Hz
+            param[TREBLE] = 10000.0f * logPot(fxParam[TREBLE], -28.0f, 0.0f); // TREBLE LPF 400 ~ 10k Hz
             break;
         case 3:
             param[BASS] = 1000.0f * logPot(fxParam[BASS], 0.0f, -20.0f); // BASS HPF 100 ~ 1000 Hz

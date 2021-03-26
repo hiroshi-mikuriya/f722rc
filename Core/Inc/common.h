@@ -31,7 +31,7 @@ constexpr float SAMPLING_FREQ = 44108.07f;
 enum FXtype { OD, DD, TR, CE, PH, RV };
 
 // エフェクト有効・無効リスト
-#define FX_ENABLE_SETTING                                                                          \
+#define FX_ENABLE_SETTING                                                                                              \
     { true, true, true, true, true, true }
 
 // タップテンポ機能 有効1 無効0
