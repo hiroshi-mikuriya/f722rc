@@ -4,6 +4,7 @@
 #include "lib_filter.hpp"
 #include "ssd1306.hpp"
 #include <cmath>
+#include <string>
 
 /*
  * ギター チューナー(ベースでの動作未確認)
@@ -217,7 +218,7 @@ void tunerDisp() {
             freqStr.insert(2, "."); // 小数点を挿入
         else
             freqStr.insert(3, ".");
-        ssd1306_R_xyWriteStrWT(121, 0, freqStr + "Hz", Font_7x10);
+        ssd1306_R_xyWriteStrWT(121, 0, (freqStr + "Hz").c_str(), Font_7x10);
     }
 
 

@@ -7,6 +7,7 @@
 #include "stm32f7xx_hal_i2s.h"
 #include <cmath>
 #include <string.h> // memset
+#include <string>
 
 #ifdef TUNER_ENABLED
 #include "tuner.h"
@@ -434,11 +435,11 @@ inline void fxDisp() {
 inline void tapDisp() {
     ssd1306_xyWriteStrWT(0, 0, "TAP TEMPO", Font_7x10);
     std::string tmpStr = std::to_string((uint16_t)g_tapTime);
-    ssd1306_R_xyWriteStrWT(114, 0, tmpStr + " ms", Font_7x10); // タップ間隔時間を表示
+    ssd1306_R_xyWriteStrWT(114, 0, (tmpStr + " ms").c_str(), Font_7x10); // タップ間隔時間を表示
     if (g_tapTime > 60.0f) {
         tmpStr = std::to_string((uint16_t)(60000.0f / g_tapTime)); // bpmを計算
     }
-    ssd1306_R_xyWriteStrWT(103, 20, tmpStr + " bpm", Font_16x26); // bpm表示
+    ssd1306_R_xyWriteStrWT(103, 20, (tmpStr + " bpm").c_str(), Font_16x26); // bpm表示
 
     uint16_t blinkCount = 1 + g_tapTime / (1000 * I2S_INTERRUPT_INTERVAL);   // 点滅用カウント数
     if (s_callbackCount % blinkCount < 60 / (1000 * I2S_INTERRUPT_INTERVAL)) // 60msバーを表示、点滅

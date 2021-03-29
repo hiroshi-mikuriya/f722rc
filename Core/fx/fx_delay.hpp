@@ -32,7 +32,7 @@ private:
     const float maxDelayTime = 1500.0f;
 
     // タップテンポ DIV定数 0←→5で循環させ、実際使うのは1～4
-    const std::string tapDivStr[6] = { "1/1", "1/1", "1/2", "1/3", "3/4", "1/1" };
+    char const* const tapDivStr[6] = { "1/1", "1/1", "1/2", "1/3", "3/4", "1/1" };
     const float tapDivFloat[6] = { 1.0f, 1.0f, 0.5f, 0.333333f, 0.75f, 1.0f };
 
     signalSw bypassIn_;

@@ -3,7 +3,6 @@
  * for Stm32 Uc and HAL-i2c lib's.
  *
  * 変更点
- * ・C++へ変更し、std::stringを使用
  * ・文字を描画するスペースがなくても無理やり描画
  * ・xyWriteStrWT関数追加
  *
@@ -13,7 +12,6 @@
 
 #include "fonts.h"
 #include "stm32f7xx_hal.h"
-#include <string>
 
 // I2c address
 #ifndef SSD1306_I2C_ADDR
@@ -51,9 +49,9 @@ void ssd1306_UpdateScreen(I2C_HandleTypeDef* hi2c);
 void ssd1306_Fill(SSD1306_COLOR color);
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
 char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color);
-char ssd1306_WriteString(std::string strn, FontDef Font, SSD1306_COLOR color);
+char ssd1306_WriteString(char const* str, FontDef Font, SSD1306_COLOR color);
 void ssd1306_SetCursor(uint8_t x, uint8_t y);
 void ssd1306_InvertColors(void);
-void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font);
-void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, std::string const& str, FontDef Font);
+void ssd1306_xyWriteStrWT(uint8_t x, uint8_t y, char const* str, FontDef Font);
+void ssd1306_R_xyWriteStrWT(uint8_t x, uint8_t y, char const* str, FontDef Font);
 void ssd1306_InvertPixel(uint8_t x, uint8_t y);
