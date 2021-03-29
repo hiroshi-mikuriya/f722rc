@@ -1,7 +1,7 @@
 #include "user_main.h"
 #include "cmsis_os.h"
 #include "common.h"
-#include "fx.hpp"
+#include "fx.h"
 #include "main.h"
 #include "ssd1306.hpp"
 #include "stm32f7xx_hal_i2s.h"
@@ -9,7 +9,7 @@
 #include <string.h> // memset
 
 #ifdef TUNER_ENABLED
-#include "tuner.hpp"
+#include "tuner.h"
 #endif
 
 extern I2C_HandleTypeDef hi2c1;
@@ -36,7 +36,7 @@ constexpr Position POS_PARAM_NAME[6] = { { 0, 17 }, { 0, 35 }, { 0, 53 }, { 65, 
 /// エフェクトパラメータ数値表示 右端の文字位置
 constexpr Position POS_PARAM_VALUE[6] = { { 52, 11 }, { 52, 29 }, { 52, 47 }, { 117, 11 }, { 117, 29 }, { 117, 47 } };
 /// I2Sの割り込み間隔時間
-constexpr float I2S_INTERRUPT_INTERVAL = static_cast<float>(BLOCK_SIZE) / SAMPLING_FREQ;
+constexpr float I2S_INTERRUPT_INTERVAL = static_cast<float>(fx::BLOCK_SIZE) / SAMPLING_FREQ;
 /// スイッチ短押しのカウント数（1つのスイッチは4回に1回の読取のため4をかける）
 constexpr uint32_t SHORT_PUSH_COUNT = 1 + SHORT_PUSH_MSEC / (4 * 1000 * I2S_INTERRUPT_INTERVAL);
 /// スイッチ長押しのカウント数（1つのスイッチは4回に1回の読取のため4をかける）
@@ -48,13 +48,13 @@ constexpr uint32_t STATUS_DISP_COUNT = 1 + STATUS_DISP_MSEC / (1000 * I2S_INTERR
 // スタティック変数定義
 namespace {
 /// 音声信号受信バッファ配列 Lch前半 Lch後半 Rch前半 Rch後半
-int32_t s_rxBuffer[BLOCK_SIZE * 4] = {};
+int32_t s_rxBuffer[fx::BLOCK_SIZE * 4] = {};
 /// 音声信号送信バッファ配列
-int32_t s_txBuffer[BLOCK_SIZE * 4] = {};
+int32_t s_txBuffer[fx::BLOCK_SIZE * 4] = {};
 /// I2Sの割り込みごとにカウントアップ タイマとして利用
 uint32_t s_callbackCount = 0;
 /// CPU使用サイクル数 各エフェクトごとに最大値を記録
-uint32_t s_cpuUsageCycleMax[FX_COUNT] = {};
+uint32_t s_cpuUsageCycleMax[fx::COUNT] = {};
 /// エフェクトパラメータ 現在何番目か ※0から始まる
 uint8_t s_fxParamIdx = 0;
 /// エフェクト種類変更フラグ 次エフェクトへ: 1 前エフェクトへ: -1
@@ -74,7 +74,7 @@ FxParam g_fxParam[PARAM_COUNT];
 /// 現在のエフェクト番号
 uint8_t g_fxNum = 0;
 /// 全てのエフェクトパラメータデータ配列
-int16_t g_fxAllData[FX_COUNT][PARAM_COUNT] = {};
+int16_t g_fxAllData[fx::COUNT][PARAM_COUNT] = {};
 /// タップテンポ入力時間 ms
 float g_tapTime = 0.0f;
 
@@ -94,7 +94,7 @@ inline void fxChange() {
 /// @brief データ読み込み
 inline void loadData() {
     uint32_t addr = DATA_ADDR;
-    for (int i = 0; i < FX_COUNT; i++) // エフェクトデータ フラッシュ読込
+    for (uint32_t i = 0; i < fx::COUNT; i++) // エフェクトデータ フラッシュ読込
     {
         for (uint32_t j = 0; j < PARAM_COUNT; j++) {
             g_fxAllData[i][j] = *reinterpret_cast<uint16_t*>(addr);
@@ -102,7 +102,7 @@ inline void loadData() {
         }
     }
     g_fxNum = *reinterpret_cast<uint16_t*>(addr);
-    if (g_fxNum >= FX_COUNT) {
+    if (g_fxNum >= fx::COUNT) {
         g_fxNum = 0;
     }
 }
@@ -133,7 +133,7 @@ inline void saveData() {
     }
 
     uint32_t addr = DATA_ADDR;
-    for (int i = 0; i < FX_COUNT; i++) // フラッシュ書込
+    for (uint32_t i = 0; i < fx::COUNT; i++) // フラッシュ書込
     {
         for (uint32_t j = 0; j < PARAM_COUNT; j++) {
             HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, addr, g_fxAllData[i][j]);
@@ -347,10 +347,10 @@ inline int32_t swap16(int32_t x) { return (0x0000FFFF & x >> 16) | x << 16; }
 inline void mainProcess(uint16_t start_sample) {
     DWT->CYCCNT = 0; // CPU使用率計算用 CPUサイクル数をリセット
 
-    float xL[BLOCK_SIZE] = {}; // Lch float計算用データ
-    float xR[BLOCK_SIZE] = {}; // Rch float計算用データ 不使用
+    float xL[fx::BLOCK_SIZE] = {}; // Lch float計算用データ
+    float xR[fx::BLOCK_SIZE] = {}; // Rch float計算用データ 不使用
 
-    for (uint32_t i = 0; i < BLOCK_SIZE; i++) {
+    for (uint32_t i = 0; i < fx::BLOCK_SIZE; i++) {
         // データ配列の偶数添字計算 Lch（Rch不使用）
         uint16_t m = (start_sample + i) * 2;
         // 受信データを計算用データ配列へ 値を-1～+1(float)へ変更
@@ -366,7 +366,7 @@ inline void mainProcess(uint16_t start_sample) {
         fx::process(xL, xR); // エフェクト処理 計算用配列を渡す
     }
 
-    for (uint32_t i = 0; i < BLOCK_SIZE; i++) {
+    for (uint32_t i = 0; i < fx::BLOCK_SIZE; i++) {
         // オーバーフロー防止
         if (xL[i] < -1.0f) {
             xL[i] = -1.0f;
@@ -512,8 +512,8 @@ void mainInit() {
 #endif
 
     // I2SのDMA開始
-    HAL_I2S_Transmit_DMA(&hi2s2, (uint16_t*)s_txBuffer, BLOCK_SIZE * 4);
-    HAL_I2S_Receive_DMA(&hi2s3, (uint16_t*)s_rxBuffer, BLOCK_SIZE * 4);
+    HAL_I2S_Transmit_DMA(&hi2s2, reinterpret_cast<uint16_t*>(s_txBuffer), fx::BLOCK_SIZE * 4);
+    HAL_I2S_Receive_DMA(&hi2s3, reinterpret_cast<uint16_t*>(s_rxBuffer), fx::BLOCK_SIZE * 4);
 
     // オーディオコーデック リセット
     LL_GPIO_ResetOutputPin(CODEC_RST_GPIO_Port, CODEC_RST_Pin);
@@ -579,5 +579,5 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef* hi2s) {
 
 /// @brief I2Sの受信バッファに全データがたまったときの割り込み
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef* hi2s) {
-    mainProcess(BLOCK_SIZE); // 16 ～ 31 を処理(BLOCK_SIZE ～ BLOCK_SIZE*2-1)
+    mainProcess(fx::BLOCK_SIZE); // 16 ～ 31 を処理(BLOCK_SIZE ～ BLOCK_SIZE*2-1)
 }

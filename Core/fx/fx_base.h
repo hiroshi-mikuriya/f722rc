@@ -1,6 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 namespace fx {
+/// ブロックサイズ まとめて処理を行う数
+constexpr uint32_t BLOCK_SIZE = 16;
 /// @brief 各エフェクトクラスの基底クラス 純粋仮想関数を含む抽象クラス
 class base {
 public:
@@ -33,6 +37,6 @@ public:
     /// @param[inout] xL L音声信号
     /// @param[inout] xR R音声信号
     /// @param[in] on エフェクトオン・オフ
-    virtual void process(float xL[], float xR[], bool on) = 0;
+    virtual void process(float (&xL)[BLOCK_SIZE], float (&xR)[BLOCK_SIZE], bool on) = 0;
 };
 } // namespace fx

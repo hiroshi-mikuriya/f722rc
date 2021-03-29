@@ -1,5 +1,6 @@
-#include "tuner.hpp"
+#include "tuner.h"
 #include "cmsis_os.h"
+#include "fx_base.h"
 #include "lib_filter.hpp"
 #include "ssd1306.hpp"
 #include <cmath>
@@ -104,7 +105,7 @@ void estimateFreq(float inData[]) {
 void bitstreamAutocorrelation(uint16_t startCnt, uint32_t bitData[]) {
     // pos：position ビットストリーム配列をズラした位置
     // pos → minPeriod ～ inDataSize/2 まで相間を計算するが、計算負荷軽減のため分割する
-    for (uint16_t pos = startCnt; (pos >= minPeriod) && (pos < startCnt + BLOCK_SIZE / 2); pos++) {
+    for (uint16_t pos = startCnt; (pos >= minPeriod) && (pos < startCnt + fx::BLOCK_SIZE / 2); pos++) {
         uint16_t midBitStreamSize = (bitStreamSize / 2) - 1; // ビットストリーム配列データ数の半分
         uint16_t index = startCnt / 32;                      // ビットストリーム配列の何番目の整数か
         uint16_t shift = startCnt % 32;                      // ビットストリーム配列内の整数 シフト数
@@ -157,11 +158,11 @@ void bitStreamSet(uint16_t cnt, float x, float inData[], uint32_t bitData[]) {
 }
 
 // 信号処理 ----------------------------------------------------------------------
-void tunerProcess(float xL[], float xR[]) {
-    float fxL[BLOCK_SIZE] = {};    // 入力フィルタ後の配列
-    static lpf2nd lpf(maxFreq);    // 入力2次LPF
-    static uint16_t inDataCnt = 0; // 入力音配列の添字カウント
-    static bool arraySel = false;  // 2つの配列 入れ替え用
+void tunerProcess(float (&xL)[fx::BLOCK_SIZE], float (&xR)[fx::BLOCK_SIZE]) {
+    float fxL[fx::BLOCK_SIZE] = {}; // 入力フィルタ後の配列
+    static lpf2nd lpf(maxFreq);     // 入力2次LPF
+    static uint16_t inDataCnt = 0;  // 入力音配列の添字カウント
+    static bool arraySel = false;   // 2つの配列 入れ替え用
 
     // 配列準備と自己相間の計算が終了したデータを使い周波数を算出、変数初期化 //////////
     if (inDataCnt == 0) {
@@ -177,7 +178,7 @@ void tunerProcess(float xL[], float xR[]) {
     bitstreamAutocorrelation(inDataCnt / 2, bitStream[!arraySel]);
 
     // 入力音配列とビットストリーム配列を準備 //////////////////////////////////////
-    for (uint32_t i = 0; i < BLOCK_SIZE; i++) {
+    for (uint32_t i = 0; i < fx::BLOCK_SIZE; i++) {
         fxL[i] = lpf.process(xL[i]);
 
         bitStreamSet(inDataCnt, fxL[i], inData[arraySel], bitStream[arraySel]);

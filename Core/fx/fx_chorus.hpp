@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "fx_base.hpp"
+#include "fx_base.h"
 #include "lib_calc.hpp"
 #include "lib_delay.hpp"
 #include "lib_filter.hpp"
@@ -109,7 +109,7 @@ public:
         }
     }
 
-    void process(float xL[], float xR[], bool on) override {
+    void process(float (&xL)[BLOCK_SIZE], float (&xR)[BLOCK_SIZE], bool on) override {
         float fxL[BLOCK_SIZE] = {};
 
         setParam();

@@ -1,4 +1,4 @@
-#include "fx.hpp"
+#include "fx.h"
 #include "common.h"
 #include "fx_chorus.hpp"
 #include "fx_delay.hpp"
@@ -21,25 +21,28 @@ fx::phaser s_ph1;
 /// リバーブ
 fx::reverb s_rv1;
 /// エフェクター順序
-fx::base* s_effects[FX_COUNT] = { &s_od1, &s_dd1, &s_tr1, &s_ce1, &s_ph1, &s_rv1 };
+fx::base* s_effects[fx::COUNT] = { &s_od1, &s_dd1, &s_tr1, &s_ce1, &s_ph1, &s_rv1 };
 /// エフェクトオン・オフ
 bool s_on = false;
+/// @brief 現在選択されているエフェクター取得
+/// @return 現在選択されているエフェクター
+inline fx::base* current() { return s_effects[g_fxNum]; }
 } // namespace
 
-char const* fx::getName() { return s_effects[g_fxNum]->getFxName(); }
+char const* fx::getName() { return current()->getFxName(); }
 
-uint16_t fx::getLedColor() { return s_effects[g_fxNum]->getLedColor(s_on); }
+uint16_t fx::getLedColor() { return current()->getLedColor(s_on); }
 
-uint8_t fx::getParamTypeCount() { return s_effects[g_fxNum]->getParamTypeCount(); }
+uint8_t fx::getParamTypeCount() { return current()->getParamTypeCount(); }
 
-void fx::process(float xL[], float xR[]) { s_effects[g_fxNum]->process(xL, xR, s_on); }
+void fx::process(float (&xL)[BLOCK_SIZE], float (&xR)[BLOCK_SIZE]) { current()->process(xL, xR, s_on); }
 
-void fx::init() { s_effects[g_fxNum]->init(g_fxAllData[g_fxNum]); }
+void fx::init() { current()->init(g_fxAllData[g_fxNum]); }
 
-void fx::deinit() { s_effects[g_fxNum]->deinit(); }
+void fx::deinit() { current()->deinit(); }
 
-void fx::setParamStr(uint8_t paramNum) { s_effects[g_fxNum]->setParamStr(paramNum); }
+void fx::setParamStr(uint8_t paramNum) { current()->setParamStr(paramNum); }
 
-void fx::change(int shiftCount) { g_fxNum = (FX_COUNT + g_fxNum + shiftCount) % FX_COUNT; }
+void fx::change(int shiftCount) { g_fxNum = (fx::COUNT + g_fxNum + shiftCount) % fx::COUNT; }
 
 void fx::toggle() { s_on = !s_on; }

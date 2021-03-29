@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fx.h"
 #include <cstdint>
 #include <string>
 
@@ -13,9 +14,6 @@
 /// ペダル名称表示
 constexpr char const* PEDAL_NAME = "Sodium v0.7";
 
-/// ブロックサイズ まとめて処理を行う数
-constexpr uint32_t BLOCK_SIZE = 16;
-
 /// サンプリング周波数
 constexpr float SAMPLING_FREQ = 44108.07f;
 
@@ -27,17 +25,6 @@ constexpr uint32_t LONG_PUSH_MSEC = 1000;
 
 /// ステータス情報表示時間 ミリ秒
 constexpr uint32_t STATUS_DISP_MSEC = 1000;
-
-/// エフェクト番号割当
-enum FXtype {
-    OD = 0,   //
-    DD,       //
-    TR,       //
-    CE,       //
-    PH,       //
-    RV,       //
-    FX_COUNT, // 最大エフェクト数
-};
 
 /// 各エフェクトのパラメータ数
 constexpr uint32_t PARAM_COUNT = 20;
@@ -71,5 +58,5 @@ struct FxParam {
 // user_main.cpp で定義
 extern FxParam g_fxParam[PARAM_COUNT];
 extern uint8_t g_fxNum;
-extern int16_t g_fxAllData[FX_COUNT][PARAM_COUNT];
+extern int16_t g_fxAllData[fx::COUNT][PARAM_COUNT];
 extern float g_tapTime;
