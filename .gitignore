@@ -15,6 +15,7 @@
 !*flash.icf
 !*.ld
 !*.sh
+!Doxyfile
 !CMakeLists.txt
 CMakeFiles
 
